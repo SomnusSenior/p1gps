@@ -1,0 +1,43 @@
+version: "3"
+services:
+  mongo:
+    image: somnussenior/p1gps:db
+    deploy:
+      replicas: 1 # para escabilidad del servicio
+      resources:
+        limits:
+          cpus: "0.15"
+          memory: 200M
+      restart_policy:
+        condition: on-failure #reiniciar el contenedor si falla
+    ports:
+      - "28017:28017" # mapeo el Puerto del contenedor (derecha) con el puerto # del host del servicio
+      - "27017:27017"
+    volumes:
+      - "db-data:/data/db" # para dar persistencia a la sesión
+  order:
+    image: somnussenior/p1gps:order
+    depends_on:
+      - "mongo" # le pasamos al servicio order la ip del servicio mongo
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 300M
+    ports:
+      - "8080:8080"
+  web:
+    image: somnussenior/p1gps:web
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 300M
+        restart_policy: on-failure
+    ports:
+      - "80:8080"
+
+volumes:
+  db-data:
