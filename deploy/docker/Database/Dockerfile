@@ -1,6 +1,6 @@
 FROM mongo
 
-MAINTAINER juliens@microsoft.com
+MAINTAINER leonardo.cardozo@alu.uclm.es
 
 COPY drop/* /tmp/
 
